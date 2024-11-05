@@ -15,6 +15,7 @@ export default function Home() {
 
     const firebaseToken = await googleUser.getIdToken()
 
+    alert(`TOKEN NYA NIH OI ==> ${firebaseToken}`)
     console.log('TOKEN NYA NIH OI', firebaseToken)
 
     const response = await axios.post(
