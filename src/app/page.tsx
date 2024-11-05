@@ -15,10 +15,14 @@ export default function Home() {
 
     const firebaseToken = await googleUser.getIdToken()
 
+    console.log('TOKEN NYA NIH OI', firebaseToken)
+
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`,
+      // `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/oauth/`,
       {
-        firebase_token: firebaseToken,
+        // firebase_token: firebaseToken,
+        firebaseToken: firebaseToken,
       }
     )
 
