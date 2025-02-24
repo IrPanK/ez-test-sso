@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import React, {
   createContext,
   useContext,
@@ -10,10 +10,6 @@ import {
   AuthContextInterface,
   AuthContextProviderProps,
   UserInterface,
-  HttpFetchInterface,
-  HttpFetchResponseInterface,
-  RefreshResponse,
-  LoginResponse,
 } from './interface'
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -30,21 +26,28 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   const [user, setUser] = useState<UserInterface>()
   const [isLoading, setIsLoading] = useState(false)
 
+  const developmentLock = useRef(false)
+
   const login = async (ticket: string) => {
     try {
-      const response = axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`,
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/login/`,
         {
           ticket,
+          service_url: 'http://localhost:3000',
         }
       )
 
-      console.log(response)
+      console.log(response.data)
     } catch (error: any) {}
   }
 
   useEffect(() => {
-    if (searchParams.toString().includes('ticket')) {
+    if (
+      !developmentLock.current &&
+      searchParams.toString().includes('ticket')
+    ) {
+      developmentLock.current = true
       const ticket = searchParams.get('ticket')
       login(ticket as string)
     }
